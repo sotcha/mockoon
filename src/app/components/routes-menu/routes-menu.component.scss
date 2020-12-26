@@ -8,3 +8,18 @@
 
   position: relative; // we need this for the resize-column
 }
+
+.search-route-wrapper {
+  text-align: left;
+  width: 100%;
+
+  .search-route-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+
+  i {
+    font-weight: bold;
+  }
+}

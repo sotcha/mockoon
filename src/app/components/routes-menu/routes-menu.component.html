@@ -1,17 +1,23 @@
 <!-- Only display the routes menu if there is at least a selected environment -->
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
   <div class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
-    <ul class="nav menu-header d-flex justify-content-between">
-      <li class="nav-item">
-        <a class="nav-link text-primary" (click)="addRoute()" ngbTooltip="Add route">
-          <i class="material-icons">add_box</i>
-        </a>
-      </li>
-    </ul>
-
+    <div class="nav menu-header d-flex">
+      <div class="btn btn-link btn-icon text-primary" (click)="addRoute()" ngbTooltip="Add route">
+        <i class="material-icons">add_box</i>
+      </div>
+      <div class="btn btn-link btn-icon text-primary search-route-wrapper" ngbTooltip="Search paths"
+           (click)="onSearchClick()">
+        <i class="material-icons" *ngIf="!showSearch$">search</i>
+        <input #searchField class="search-route form-control " type="text"
+               (input)="searchRoutes($event.target.value) "
+               (keydown)="searchKeyPress($event)"
+               [hidden]="!showSearch$"/>
+        <i class="material-icons search-route-close" *ngIf="showSearch$" (click)="closeSearch($event)">close</i>
+      </div>
+    </div>
     <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
       [dragulaModel]="activeEnvironment.routes">
-      <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
+      <li class="nav-item" *ngFor="let environmentRoute of (activeEnvironmentRoutes$ | async) ">
         <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
           (click)="selectRoute(environmentRoute.uuid)"
           (contextmenu)="openContextMenu(environmentRoute.uuid, $event)">
